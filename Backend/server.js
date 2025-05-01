@@ -7,10 +7,10 @@ import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 const app = express();
-app.use(cors({
-    origin: 'https://to-do-roan-theta.vercel.app', // your frontend origin
-    credentials: true               // allow cookies
-  }));
+// app.use(cors({
+//     origin: 'https://to-do-roan-theta.vercel.app', // your frontend origin
+//     credentials: true               // allow cookies
+//   }));
 app.use(cors({
     origin: 'http://localhost:5173', // your frontend origin
     credentials: true               // allow cookies
