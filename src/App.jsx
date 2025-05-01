@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios';
 import { MdDeleteForever } from "react-icons/md";
+axios.defaults.withCredentials = true;
 
 
 const API = 'http://localhost:5000/todos';

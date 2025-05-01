@@ -2,12 +2,27 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-
+import cookieParser from 'cookie-parser';
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin: 'https://to-do-roan-theta.vercel.app', // your frontend origin
+    credentials: true               // allow cookies
+  }));
+app.use(cors({
+    origin: 'http://localhost:5173', // your frontend origin
+    credentials: true               // allow cookies
+  }));
 app.use(express.json());
+app.use(cookieParser());
+
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Credentials", "true");
+    next();
+  });
+  
 
 const mongoDBUri = 'mongodb+srv://monga1807:smonga%40123@cluster0-todo.ovrfpat.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0-todo';
 mongoose.connect(mongoDBUri)
@@ -17,14 +32,34 @@ mongoose.connect(mongoDBUri)
 import { Schema, model } from 'mongoose';
 
 const todoSchema = new Schema({
+    userId: String,
     text: String,
     completed: Boolean
 });
 const Todo = model('Todo', todoSchema);
 
+
+
+// Middleware to assign anonymous user ID
+app.use((req, res, next) => {
+    if (!req.cookies.anon_user_id) {
+        const anonId = uuidv4();
+        res.cookie('anon_user_id', anonId, {
+            httpOnly: false, // accessible by frontend JS if needed
+            maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+        });
+        req.anonId = anonId;
+    } else {
+        req.anonId = req.cookies.anon_user_id;
+    }
+    next();
+});
+
+
+
 app.get('/todos', async (req, res) => {
     try {
-        const todos = await Todo.find();
+        const todos = await Todo.find({ userId: req.anonId });
         res.json(todos);
     } catch (err) {
         res.status(500).json({ error: "Failed to fetch todos" });
@@ -36,7 +71,7 @@ app.post('/todos', async (req, res) => {
         const { text } = req.body;
         if (!text) return res.status(400).json({ error: 'Text is required' });
 
-        const newTodo = new Todo({ text, completed: false });
+        const newTodo = new Todo({ text, completed: false, userId: req.anonId  });
         const saved = await newTodo.save();
         res.status(201).json(saved);
     } catch (err) {
