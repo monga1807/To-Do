@@ -1,0 +1,36 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+ .Todo{
+  max-height: 250px;
+  min-width: 400px;
+  background-color: rgb(148, 148, 123);
+}
+.Todo-submit{
+  margin: 10px;
+  /* height: 40px; */
+   padding: 7px;
+  border-radius: 5px;
+} 
+.Todo-input{
+  margin: 5px;
+  padding: 10px;
+} 
+/* .span{
+  margin:10px;
+} */
+.list-todo{
+  margin: 10px;
+  padding: 10px;
+  /* background-color: blue; */
+}
+/* .list {
+    background-color: aqua;
+} */
+.list button{
+  background-color: rgb(255, 255, 255);
+
+}
