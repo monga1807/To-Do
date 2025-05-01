@@ -5,7 +5,11 @@ import { MdDeleteForever } from "react-icons/md";
 axios.defaults.withCredentials = true;
 
 
-const API = 'http://localhost:5000/todos';
+// const API = 'http://localhost:5000/todos';
+const API = process.env.NODE_ENV === 'production'
+  ? 'mongodb+srv://monga1807:smonga%40123@cluster0-todo.ovrfpat.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0-todo'  // Production API URL
+  : 'http://localhost:5000/todos';  // Local development API URL
+
 
 function App() {
   const [todos, setTodos] = useState([]);

@@ -20,20 +20,19 @@ app.use(express.json());
 app.use(cookieParser());
 
 const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? ['https://to-do-roan-theta.vercel.app'] // Production URL (Vercel)
-  : ['http://localhost:5173']; // Local development URL
+  ? ['https://to-do-roan-theta.vercel.app']  // Production URL
+  : ['http://localhost:5173'];  // Local development URL
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) { // Handle non-browser requests (Postman)
+    if (allowedOrigins.includes(origin) || !origin) {  // Allow non-browser requests like Postman
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true, // Enable credentials (cookies) for cross-origin requests
+  credentials: true,  // Allow cookies to be sent with requests
 }));
-
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Credentials", "true");
