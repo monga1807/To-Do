@@ -7,16 +7,33 @@ import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 
 const app = express();
-app.use(cors({
-    origin: 'https://to-do-roan-theta.vercel.app', // your frontend origin
-    credentials: true               // allow cookies
-  }));
+// app.use(cors({
+//     origin: 'https://to-do-roan-theta.vercel.app', // your frontend origin
+//     credentials: true               // allow cookies
+//   }));
 // app.use(cors({
 //     origin: 'http://localhost:5173', // your frontend origin
 //     credentials: true               // allow cookies
 //   }));
+// app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? ['https://to-do-roan-theta.vercel.app'] // Production URL (Vercel)
+  : ['http://localhost:5173']; // Local development URL
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) { // Handle non-browser requests (Postman)
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // Enable credentials (cookies) for cross-origin requests
+}));
+
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Credentials", "true");
