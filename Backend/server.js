@@ -40,10 +40,12 @@ app.use((req, res, next) => {
   });
   
 
-const mongoDBUri = 'mongodb+srv://monga1807:smonga%40123@cluster0-todo.ovrfpat.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0-todo';
-mongoose.connect(mongoDBUri)
-    .then(() => console.log("Connected"))
+  const mongoDBUri = process.env.MONGODB_URI || 'mongodb+srv://monga1807:smonga%40123@cluster0-todo.ovrfpat.mongodb.net/tododb?retryWrites=true&w=majority&appName=Cluster0-todo';
+
+  mongoose.connect(mongoDBUri)
+    .then(() => console.log("MongoDB connected"))
     .catch((err) => console.error("MongoDB connection error:", err));
+  
 
 import { Schema, model } from 'mongoose';
 
@@ -72,6 +74,23 @@ app.use((req, res, next) => {
 });
 
 
+
+// app.get('/todos', async (req, res) => {
+//     try {
+//       console.log("anonId:", req.anonId);  // Log the user ID
+  
+//       if (!req.anonId) {
+//         return res.status(400).json({ error: "No user ID found in request" });
+//       }
+  
+//       const todos = await Todo.find({ userId: req.anonId });
+//       res.json(todos);
+//     } catch (err) {
+//       console.error("Error in GET /todos:", err);
+//       res.status(500).json({ error: "Failed to fetch todos" });
+//     }
+//   });
+  
 
 app.get('/todos', async (req, res) => {
     try {
